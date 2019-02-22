@@ -2,19 +2,20 @@
 // 组件并暴露出组件选项对象。
 
 <template>
-  <div>
-    <Film></Film>
-  </div>
+<div>
+  <router-view name='top'></router-view>
+
+  <router-view></router-view>
+</div>
+
+  <!-- <div>-->
+    <!--<router-view></router-view>-->
+
+    <!--
+      1. url地址：localhost:8080/#/films   页面绚烂组件：Film.vue
+      2. localhost:8080/#/cinemas   Cineam.vue
+      3. localhost:8080/#/center   Center.vue
+     -->
+    <!--<MzFooter></MzFooter>-->
+  <!--</div> -->
 </template>
-
-<script>
-
-import Film from './views/Film.vue';
-
-export default {
-  // 局部注册 Film 组件
-  components: {
-    Film: Film
-  }
-}
-</script>

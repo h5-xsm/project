@@ -1,5 +1,11 @@
 <template>
-    <div>
-        影院页面
-    </div>
+  <div>
+    <h1>影院页面</h1>
+  </div>
 </template>
+
+<script>
+
+export default {
+}
+</script>
