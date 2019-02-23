@@ -25,6 +25,9 @@ import Cinema from './views/Cinema.vue';
 import City from './views/City.vue';
 import Home from './views/Home.vue';
 import Detail from './views/Detail.vue';
+import Card from './views/Card.vue';
+import Money from './views/Money.vue';
+import System from './views/System.vue';
 import Login from './views/Login.vue';
 import Nprogress from 'nprogress';
 
@@ -100,66 +103,81 @@ let router = new VueRouter({
       component: Detail,
       props: true
     },
+
+    // 组件守卫的案例
+    // {
+    //   path: '/card/:abc',
+    //   component: {
+    //     render (h) {
+    //       let _this = this;
+    //       return h('div', [
+    //         '卖座卡页面',
+    //         h('button', {
+    //           on: {
+    //             click: function () {
+    //               console.log('我被点击了');
+    //               _this.reload()
+    //             }
+    //           }
+    //         }, [
+    //           '我的天',
+    //           h('span', '我就是个span')
+    //         ])
+    //       ]);
+    //     },
+    //     methods: {
+    //       reload () {
+    //         // console.log('1111');
+    //         // router.push('/card/李四'); 等同于下面对象的方法
+    //         router.push({
+    //           path: '/card/李四'
+    //         })
+    //       }
+    //     },
+    //     // 组件内的路由守卫
+    //     beforeRouteEnter (to, from, next) {
+    //       console.log('enter');
+    //       next();
+    //     },
+    //     // 只会在页面内使用路由参数是候  如：/card/100 -> /card/200
+    //     beforeRouteUpdate (to, from, next) {
+    //       console.log('update');
+    //       next();
+    //     },
+    //     beforeRouteLeave (to, from, next) {
+    //       console.log('leave');
+    //       next();
+    //     }
+    //   }
+    // },
+    // {
+    //   path: '/money',
+    //   component: {
+    //     render (h) {
+    //       return h('div', '余额页面');
+    //     }
+    //   }
+    // },
+    // {
+    //   path: '/system',
+    //   component: {
+    //     render (h) {
+    //       return h('div', '设置页面');
+    //     }
+    //   }
+    // },
+
     {
-      path: '/card/:abc',
-      component: {
-        render (h) {
-          let _this = this;
-          return h('div', [
-            '卖座卡页面',
-            h('button', {
-              on: {
-                click: function () {
-                  console.log('我被点击了');
-                  _this.reload()
-                }
-              }
-            }, [
-              '我的天',
-              h('span', '我就是个span')
-            ])
-          ]);
-        },
-        methods: {
-          reload () {
-            // console.log('1111');
-            // router.push('/card/李四'); 等同于下面对象的方法
-            router.push({
-              path: '/card/李四'
-            })
-          }
-        },
-        // 组件内的路由守卫
-        beforeRouteEnter (to, from, next) {
-          console.log('enter');
-          next();
-        },
-        // 只会在页面内使用路由参数是候  如：/card/100 -> /card/200
-        beforeRouteUpdate (to, from, next) {
-          console.log('update');
-          next();
-        },
-        beforeRouteLeave (to, from, next) {
-          console.log('leave');
-          next();
-        }
-      }
+      path: '/card',
+      component: Card
     },
     {
       path: '/money',
-      component: {
-        render (h) {
-          return h('div', '余额页面');
-        }
-      }
+      component: Money
     },
     {
       path: '/system',
-      component: {
-        render (h) {
-          return h('div', '设置页面');
-        }
-      }
+      component: System
     },
     {
       path: '/login',
@@ -175,18 +193,6 @@ let router = new VueRouter({
     // {
     //   path: '/films', // 就是 url 路径
     //   component: Film // 就是引进的组件
-    // },
-    // {
-    //   path: '/centers',
-    //   component: Center
-    // },
-    // {
-    //   path: '/cinemas',
-    //   component: Cinema
-    // },
-    // {
-    //   path: '/city',
-    //   component: City
     // }
   ]
 })
@@ -209,11 +215,16 @@ router.beforeEach((to, from, next) => {
   // Nprogress.start()  进度条显示出来
   Nprogress.start();
 
-  if (to.path === '/card' || to.path === '/money' || to.path === '/system') {
+  if ((to.path === '/card' || to.path === '/money' || to.path === '/system') && !sessionStorage.getItem('nickname')) {
     // next('/login') // 字符串模式
-    // next({
-    //   path: '/login' // 对象模式
-    // })
+    next({
+      path: '/login', // 对象模式
+
+      // 从定向到登陆后用户想去的页面
+      query: {
+        redirect: to.fullPath
+      }
+    })
     next();
   } else {
     next()
