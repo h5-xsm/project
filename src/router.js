@@ -25,6 +25,11 @@ import Cinema from './views/Cinema.vue';
 import City from './views/City.vue';
 import Home from './views/Home.vue';
 import Detail from './views/Detail.vue';
+import Login from './views/Login.vue';
+import Nprogress from 'nprogress';
+
+// 进度的转圈圈隐藏 与 显示
+Nprogress.configure({ showSpinner: true });
 
 // 3. 使用 vue.use(vue-router)
 //  VueRouter  为什么要使用 Vue.use(), 为了去触发 VueRouter 的install 方法
@@ -95,6 +100,71 @@ let router = new VueRouter({
       component: Detail,
       props: true
     },
+    {
+      path: '/card/:abc',
+      component: {
+        render (h) {
+          let _this = this;
+          return h('div', [
+            '卖座卡页面',
+            h('button', {
+              on: {
+                click: function () {
+                  console.log('我被点击了');
+                  _this.reload()
+                }
+              }
+            }, [
+              '我的天',
+              h('span', '我就是个span')
+            ])
+          ]);
+        },
+        methods: {
+          reload () {
+            // console.log('1111');
+            // router.push('/card/李四'); 等同于下面对象的方法
+            router.push({
+              path: '/card/李四'
+            })
+          }
+        },
+        // 组件内的路由守卫
+        beforeRouteEnter (to, from, next) {
+          console.log('enter');
+          next();
+        },
+        // 只会在页面内使用路由参数是候  如：/card/100 -> /card/200
+        beforeRouteUpdate (to, from, next) {
+          console.log('update');
+          next();
+        },
+        beforeRouteLeave (to, from, next) {
+          console.log('leave');
+          next();
+        }
+      }
+    },
+    {
+      path: '/money',
+      component: {
+        render (h) {
+          return h('div', '余额页面');
+        }
+      }
+    },
+    {
+      path: '/system',
+      component: {
+        render (h) {
+          return h('div', '设置页面');
+        }
+      }
+    },
+    {
+      path: '/login',
+      component: Login
+    },
 
     // 设置一个 通配符的 一级路由，当url地址无法与上面的规则匹配的时候，就会跟我匹配。
     {
@@ -119,6 +189,41 @@ let router = new VueRouter({
     //   component: City
     // }
   ]
+})
+
+/**
+ * 路由守卫中的参数
+ * 例如：a -> b ; a去到b
+ *
+ * to 将要去的路由的路由对象    to就是b
+ * from 从哪里去的路由的路由对象    from就是a
+ * next 是否允许去
+ *
+ *  a -> b  如果不想去到b   next(false) 或者不使用 next()
+ *          如果允许去到b   next()
+ *          如果不想让他去 b 页面 ， 并想让他去 /login页面 ：next('/login')
+ */
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  // Nprogress.start()  进度条显示出来
+  Nprogress.start();
+
+  if (to.path === '/card' || to.path === '/money' || to.path === '/system') {
+    // next('/login') // 字符串模式
+    // next({
+    //   path: '/login' // 对象模式
+    // })
+    next();
+  } else {
+    next()
+  }
+})
+
+// 全局后置守卫
+router.afterEach((to, from) => {
+  // Nprogress.done()  进度条隐藏
+  Nprogress.done();
 })
 
 // 5. 暴露这个配置 【就是暴露第4步的配置】

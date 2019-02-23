@@ -12,7 +12,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'semi':'off' // 去除分号（;）的规则
+    'semi': 'off' // 去除分号（;）的规则
   },
   parserOptions: {
     parser: 'babel-eslint'
