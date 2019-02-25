@@ -23,7 +23,7 @@ import Film from './views/Film.vue';
 import Center from './views/Center.vue';
 import Cinema from './views/Cinema.vue';
 import City from './views/City.vue';
-import Home from './views/Home.vue';
+// import Home from './views/Home.vue'; // Home.vue模块 设成路由懒加载
 import Detail from './views/Detail.vue';
 import Card from './views/Card.vue';
 import Money from './views/Money.vue';
@@ -42,6 +42,14 @@ Vue.use(VueRouter);
 let router = new VueRouter({
   mode: 'hash',
 
+  // 跳转页面后滚动条位置
+  scrollBehavior (to, from, savedPosition) {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+
   // 配置路由对照表【就是一个 url 地址 对应 怎么样的视图组件】
 
   // localhost:8080/#/films  访问组件 Film.vue
@@ -53,7 +61,7 @@ let router = new VueRouter({
   routes: [
     {
       path: '/', // /home 简写成 /
-      component: Home,
+      component:() => import(/* webpackChunkName: "文件名字" */ './views/Home.vue'), // Home.vue模块 路由懒加载
       // children 数组下的第一层 都是一级路由
       // PS: 不是一级路由的话，path路径前面不要加 /
       // PS: 二级或二级以上的路由，他们的url地址是会从一级路由开始一直做追加的。
